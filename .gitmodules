@@ -1,0 +1,4 @@
+[submodule "references"]
+	path = references
+	url = http://10.9.12.33:31001/aice/references.git
+	branch = dev
