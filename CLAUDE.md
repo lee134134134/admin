@@ -58,8 +58,14 @@ src/
 
 ## 当前示例页面
 
-- `/login` 登录页(占位, 未对接真实接口)
-- `/dashboard` 工作台(占位统计数据, `src/api/dashboard.ts` 可对接真实接口)
+- `/login` 登录页（对接 `POST /api/auth/login`，默认账号 admin/admin123）
+- `/dashboard` 工作台（`GET /api/dashboard/stats` 真实统计数据）
+- `/calendar` 日程日历（Schedule-X 日历组件，对接 `/api/calendar/events` CRUD）
+
+## 后端服务
+
+- 后端位于 `ai-agent/apps/backend`（Go + Gin + GORM + SQLite），开发启动：`PORT=8000 go run cmd/server/main.go`（模块下载需 `GOPROXY=https://goproxy.cn,direct`）。
+- 提供 `/health`、`/api/auth/login`、`/api/dashboard/stats`、`/api/calendar/events`（CRUD）、`/api/v1/workflows`（工作流 CRUD，公开）。
 
 ## 后续建议(按优先级)
 

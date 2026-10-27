@@ -11,9 +11,13 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@schedule-x/calendar": "^4.9.1",
+    "@schedule-x/events-service": "^4.9.1",
+    "@schedule-x/theme-default": "^4.9.1",
     "axios": "^1.19.0",
     "element-plus": "^2.9.0",
     "pinia": "^3.0.0",
+    "temporal-polyfill": "^1.0.5",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },

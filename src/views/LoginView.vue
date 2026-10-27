@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import { login } from '@/api/auth'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -21,10 +22,13 @@ async function handleLogin() {
   }
   loading.value = true
   try {
-    // TODO: 对接真实登录接口(如 POST /api/auth/login)
-    userStore.setToken('mock-token')
+    const data = await login(form.value.username, form.value.password)
+    userStore.setToken(data.token)
+    userStore.setName(data.name)
     ElMessage.success('登录成功')
     router.push('/')
+  } catch {
+    // 错误由响应拦截器统一提示
   } finally {
     loading.value = false
   }

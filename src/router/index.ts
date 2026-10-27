@@ -21,6 +21,12 @@ const router = createRouter({
           component: () => import('@/views/DashboardView.vue'),
           meta: { title: '工作台' },
         },
+        {
+          path: 'calendar',
+          name: 'calendar',
+          component: () => import('@/views/CalendarView.vue'),
+          meta: { title: '日程日历' },
+        },
       ],
     },
     {

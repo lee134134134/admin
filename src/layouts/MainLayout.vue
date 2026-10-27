@@ -31,6 +31,10 @@ function handleLogout() {
           <el-icon><Odometer /></el-icon>
           <span>工作台</span>
         </el-menu-item>
+        <el-menu-item index="/calendar">
+          <el-icon><Calendar /></el-icon>
+          <span>日程日历</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
 
