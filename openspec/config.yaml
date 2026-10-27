@@ -1,0 +1,72 @@
+schema: spec-driven
+
+# 项目上下文：创建 proposal/specs/design/tasks 时会注入给 AI。
+# 详细规范在 .agents/rules/（唯一维护源），技能在 .agents/skills/。
+context: |
+  ## 项目概述
+  AI Admin —— AI 服务管理后台（外包项目），基于 Vue 3 + TypeScript + Vite 的 SPA 管理端，
+  面向 AI 服务的运营、监控与配置管理。工作区 `/Users/lee/Documents/code/waibao/ai/`
+  （兄弟项目：ai-agent、ragAdmin、ros2、yijing）。后端为 Go + Gin + GORM + SQLite。
+
+  ## 技术栈（强制）
+  - Vue 3.5：Composition API + `<script setup lang="ts">`
+  - TypeScript 5.8 strict（含 noUnusedLocals / noUnusedParameters）；禁止 any / @ts-ignore
+  - Vite 7；包管理 pnpm（锁文件 pnpm-lock.yaml）
+  - Element Plus 2.x（全量引入，zh-CN）+ @element-plus/icons-vue
+  - Pinia 3（setup store 风格）
+  - Vue Router 4（history 模式）
+  - Axios：统一封装在 src/api/request.ts
+
+  ## 目录结构
+  ```
+  src/
+  ├── api/        # request.ts(httpGet/httpPost/httpPut/httpDelete 泛型封装) + 业务域模块 auth/dashboard/calendar
+  ├── assets/     # main.css（全局 reset + 字体/底色）
+  ├── layouts/    # MainLayout.vue（侧边栏 #001529 + 顶栏 + 内容区）
+  ├── router/     # index.ts + 登录守卫
+  ├── stores/     # Pinia setup store（如 user.ts）
+  ├── utils/      # 通用工具
+  ├── views/      # 页面组件；组件级私有子组件放 views/<页面>/components/
+  ├── App.vue / main.ts / vite-env.d.ts
+  ```
+  页面：LoginView / DashboardView / CalendarView。
+
+  ## 关键约定
+  - 别名一律 `@/` 指向 `src/`
+  - 新接口在 `src/api/<业务域>.ts`，用 httpGet<T>/httpPost<T>/httpPut<T>/httpDelete<T> 显式声明返回类型；
+    命名 getXxxList / getXxxDetail / createXxx / updateXxx / deleteXxx（禁 fetch 前缀）
+  - 错误由响应拦截器统一处理（401 清 token 跳 /login，其余 ElMessage.error）；
+    **业务代码只处理成功逻辑，禁止重复提示**
+  - 新页面在 src/router/index.ts 注册，`meta.title` 必填（顶栏标题），未标 `meta.public` 的需登录
+  - 跨组件共享状态用 Pinia；组件内局部状态用 ref/reactive
+  - 样式 scoped + BEM（如 main-layout__aside）；全局样式只在 assets/main.css
+  - 注释与 UI 文案用中文，变量/函数命名用英文
+
+  ## 质量门禁（每个 change 的 tasks 必须包含）
+  - `pnpm type-check` 通过（最低要求）
+  - `pnpm lint` 与 `pnpm format:check` 通过
+  - `pnpm build` 通过
+
+  ## 规范与技能索引
+  - 规则：`.agents/rules/01-项目概述.md` ~ `11-测试规范.md`（索引见 `.agents/rules/README.md`）
+  - 技能：`.agents/skills/`（索引见 `.agents/skills/README.md`）
+  - 有设计稿时：先用 `.agents/skills/design-analysis` 产出 UI 分析清单，
+    tasks 中写明「依据 UI 分析清单实现」，实现后用 `.agents/skills/ui-verification` 验收
+
+rules:
+  proposal:
+    - 用中文书写，遵循模板结构；明确「现状 → 期望」的差异
+    - 必须写清范围与非目标（Non-goals），避免范围蔓延
+    - 必须列出受影响的模块与文件路径，引用对应 .agents/rules/ 规则文件
+    - 有设计稿时必须说明 UI 分析清单与验收方式
+  tasks:
+    - 每个 task 应是 2 小时内可完成的粒度，单一可验证结果
+    - task 必须指明涉及的具体文件路径
+    - 末尾必须包含质量门禁 task：`pnpm type-check`、`pnpm lint`、`pnpm build`
+    - 涉及新页面/新接口/新 store/新组件时，task 中注明需读取对应 .agents/skills/ 技能
+  design:
+    - 仅在存在架构权衡、跨模块影响或高风险改动时编写；简单 CRUD 类变更跳过
+    - 需记录被否决的备选方案与理由
+  specs:
+    - 描述能力的可验证行为（Given/When/Then 风格），不写实现细节
+    - 只写本次变更新增或修改的能力
